@@ -1,0 +1,2 @@
+# vazirlik
+Vazirlik malaka oshirish
