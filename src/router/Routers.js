@@ -30,6 +30,7 @@ export default function Routers() {
             <Switch>
               <Route path="/profile" exact component={Profile} />
               <Route path="/profile/settings" component={ProfileSetings} />
+              <Route path="*" component={Notfound} />
             </Switch>
           </Nav>
         </Route>
