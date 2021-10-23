@@ -1,14 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Form, DatePicker, Checkbox } from "antd";
+import { Form, DatePicker, Checkbox, message } from "antd";
 import avatar from "./avatar.png";
 import "antd/dist/antd.css";
+import { useDispatch, useSelector } from "react-redux";
+
+import { register, clearErrors } from "../../../actions/userActions";
 
 const CheckboxGroup = Checkbox.Group;
 
 const data = ["Toshkent", "Andijon", "Xorazm"];
 const data2 = [
-  { toshkent: ["Yunusobod", "Chilonzor"] },
+  { Toshkent: ["Yunusobod", "Chilonzor"] },
   { Andijon: ["Qorasuv", "Dexqonobod"] },
   { Xorazm: ["Nukus", "Bekobod"] },
 ];
@@ -29,30 +32,53 @@ const plainOptions = [
   "G‘aznachilik boshqarmasi va g‘aznachilik bo‘linmalari boshliqlari",
 ];
 
-export default function Registration() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+export default function Registration({ history }) {
+  const [name, setName] = useState("");
+  const [surName, setSurName] = useState("");
+  const [fathName, setFathName] = useState("");
   const [time, setTime] = useState(Date.now);
+  const [userName, setUserName] = useState("");
+  const [password, setPassword] = useState("");
+  const [jshshir, setJshshir] = useState("");
   const [region, setRegion] = useState("");
+  const [city, setCity] = useState("");
+  const [jinsi, setJinsi] = useState("erkak");
+  const [email, setEmail] = useState("");
+  const [mobilePhone, setMobilePhone] = useState("");
+  const [phone, setPhone] = useState("");
   const [organization, setOrganization] = useState("");
   const [organizationName, setOrganizationName] = useState("");
-  const [city, setCity] = useState("");
-  const [jinsi, setJinsi] = useState("");
+  const [section, setSection] = useState("");
+  const [position, setPosition] = useState("");
   const [avatarImage, setAvatarImage] = useState(avatar);
-  const [checkedItems, setCheckedItems] = useState([]);
   const [checkedList, setCheckedList] = useState([]);
   const [indeterminate, setIndeterminate] = useState(true);
+
   const onChange = (list) => {
     setCheckedList(list);
     setIndeterminate(!!list.length && list.length < plainOptions.length);
   };
-  console.log(checkedItems);
+
+  const { loading, login, error, user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (login) {
+      history.push("/login");
+    }
+    if (error) {
+      console.log(error);
+      message.error("Submit failed!");
+      dispatch(clearErrors());
+    }
+  }, [history, login, error, dispatch]);
 
   const imageHandler = (e) => {
     const reader = new FileReader();
     reader.onload = () => {
       if (reader.readyState === 2) {
         setAvatarImage(reader.result);
+        console.log(reader);
       }
     };
     reader.readAsDataURL(e.target.files[0]);
@@ -60,7 +86,49 @@ export default function Registration() {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    console.log(username, password, time);
+    const formData = {
+      name: name,
+      Surname: surName,
+      Fathname: fathName,
+      dateBirth: time,
+      Login: userName,
+      Parol: password,
+      jshshir: jshshir,
+      Hudud: region,
+      Tuman: city,
+      Sex: jinsi,
+      email: email,
+      wkphone: `998${phone}`,
+      mlphone: `998${mobilePhone}`,
+      Muassasa: organization,
+      Muassasa2: organizationName,
+      Bol: section,
+      Lavoz: position,
+      Course: checkedList,
+      file: avatarImage,
+    };
+    // const formData = new FormData();
+    // formData.append("name", name);
+    // formData.append("Surname", surName);
+    // formData.append("Fathname", fathName);
+    // formData.append("dateBirth", time);
+    // formData.append("Login", userName);
+    // formData.append("jshshir", jshshir);
+    // formData.append("Hudud", region);
+    // formData.append("Tuman", city);
+    // formData.append("Sex", jinsi);
+    // formData.append("email", email);
+    // formData.append("wkphone", `998${phone}`);
+    // formData.append("mlphone", `998${mobilePhone}`);
+    // formData.append("Muassasa", organization);
+    // formData.append("Muassasa2", organizationName);
+    // formData.append("Bol", section);
+    // formData.append("Lavoz", position);
+    // formData.append("Course", checkedList);
+    // formData.append("file", avatarImage);
+    console.log(formData);
+    dispatch(register(formData));
+    message.success("Submit success!");
   };
   return (
     <div>
@@ -80,36 +148,42 @@ export default function Registration() {
               className="flex flex-col pt-1 md:pt-8"
               onSubmit={submitHandler}
             >
-              <div class="grid max-w-5xl grid-cols-3 gap-4 ">
-                <div class="col-span-3 lg:col-span-1 md:col-span-1 tablet:col-span-1 mobile:col-span-1">
-                  <div class=" relative ">
+              <div className="grid max-w-5xl grid-cols-3 gap-4 ">
+                <div className="col-span-3 lg:col-span-1 md:col-span-1 tablet:col-span-1 mobile:col-span-1">
+                  <div className=" relative ">
                     <input
                       type="text"
                       id="contact-form-name"
-                      class=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                      className=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                       placeholder="Ism"
+                      onChange={(e) => setName(e.target.value)}
+                      value={name}
                       required
                     />
                   </div>
                 </div>
-                <div class="col-span-3 lg:col-span-1 md:col-span-1 tablet:col-span-1 mobile:col-span-1">
-                  <div class=" relative ">
+                <div className="col-span-3 lg:col-span-1 md:col-span-1 tablet:col-span-1 mobile:col-span-1">
+                  <div className=" relative ">
                     <input
                       type="text"
                       id="contact-form-surname"
-                      class=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                      className=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                       placeholder="Familiya"
+                      onChange={(e) => setSurName(e.target.value)}
+                      value={surName}
                       required
                     />
                   </div>
                 </div>
-                <div class="col-span-3 lg:col-span-1 md:col-span-1 tablet:col-span-1 mobile:col-span-1">
-                  <div class=" relative ">
+                <div className="col-span-3 lg:col-span-1 md:col-span-1 tablet:col-span-1 mobile:col-span-1">
+                  <div className=" relative ">
                     <input
                       type="text"
                       id="contact-form-fathername"
-                      class=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                      className=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                       placeholder="Otasining ismi"
+                      onChange={(e) => setFathName(e.target.value)}
+                      value={fathName}
                       required
                     />
                   </div>
@@ -145,28 +219,33 @@ export default function Registration() {
                     id="customFile"
                     accept="images/*"
                     onChange={imageHandler}
+                    required
                   />
                 </div>
               </div>
-              <div class="grid max-w-5xl grid-cols-2 gap-4 ">
-                <div class="col-span-2 lg:col-span-1 d:col-span-1 tablet:col-span-1 mobile:col-span-1">
-                  <div class=" relative ">
+              <div className="grid max-w-5xl grid-cols-2 gap-4 ">
+                <div className="col-span-2 lg:col-span-1 d:col-span-1 tablet:col-span-1 mobile:col-span-1">
+                  <div className=" relative ">
                     <input
                       type="text"
                       id="contact-form-username"
-                      class=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                      className=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                       placeholder="Username"
+                      onChange={(e) => setUserName(e.target.value)}
+                      value={userName}
                       required
                     />
                   </div>
                 </div>
-                <div class="col-span-2 lg:col-span-1 d:col-span-1 tablet:col-span-1 mobile:col-span-1">
-                  <div class=" relative ">
+                <div className="col-span-2 lg:col-span-1 d:col-span-1 tablet:col-span-1 mobile:col-span-1">
+                  <div className=" relative ">
                     <input
                       type="password"
                       id="contact-form-password"
-                      class=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                      className=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                       placeholder="Parol"
+                      onChange={(e) => setPassword(e.target.value)}
+                      value={password}
                       required
                     />
                   </div>
@@ -177,22 +256,26 @@ export default function Registration() {
                   <input
                     type="text"
                     id="contact-form-jshshir"
-                    class=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                    className=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                     placeholder="JSHSHIR raqamini kiriting"
+                    onChange={(e) => setJshshir(e.target.value)}
+                    value={jshshir}
                     required
                   />
                 </div>
               </div>
               <div className="grid max-w-5xl mt-3 grid-cols-3 gap-4 ">
                 <div className="col-span-3  lg:col-span-1 d:col-span-1 tablet:col-span-1 mobile:col-span-1">
-                  <label class="block text-left ">
+                  <label className="block text-left ">
                     Hududingizni tanlang
                     <select
                       id="region"
-                      class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500   "
+                      className="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500   "
                       name="region"
                       onChange={(e) => setRegion(e.target.value)}
                     >
+                      <option>Tanlang</option>
+
                       {data.map((d, index) => (
                         <option key={index} value={d}>
                           {d}
@@ -202,15 +285,16 @@ export default function Registration() {
                   </label>
                 </div>
                 <div className="col-span-3 lg:col-span-1 d:col-span-1 tablet:col-span-1 mobile:col-span-1">
-                  <label class="block text-left">
+                  <label className="block text-left">
                     Shaharingizni tanlang
                     <select
-                      id="region"
-                      class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                      id="city"
+                      className="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
                       name="city"
                       onChange={(e) => setCity(e.target.value)}
                       disabled={region ? false : true}
                     >
+                      <option>Tanlang</option>
                       {data2.map((d) => {
                         return d[`${region}`]
                           ? d[`${region}`].map((item, index) => (
@@ -224,12 +308,13 @@ export default function Registration() {
                   </label>
                 </div>
                 <div className="col-span-3 lg:col-span-1 d:col-span-1 tablet:col-span-1 mobile:col-span-1">
-                  <label class="block text-left ">
+                  <label className="block text-left ">
                     Jinsingizni tanlang
                     <select
-                      id="region"
-                      class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                      id="sex"
+                      className="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
                       name="sex"
+                      onChange={(e) => setJinsi(e.target.value)}
                     >
                       <option value="erkak">Erkak</option>
                       <option value="ayol">Ayol</option>
@@ -242,8 +327,10 @@ export default function Registration() {
                   <input
                     type="email"
                     id="contact-form-email"
-                    class=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                    className=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                     placeholder="example@email.com"
+                    onChange={(e) => setEmail(e.target.value)}
+                    value={email}
                     required
                   />
                 </div>
@@ -255,9 +342,11 @@ export default function Registration() {
                   </label>
                   <input
                     type="number"
-                    id="contact-form-email"
-                    class=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                    id="contact-form-mobile-number"
+                    className=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                     placeholder="99-999-88-77"
+                    onChange={(e) => setMobilePhone(e.target.value)}
+                    value={mobilePhone}
                     required
                   />
                 </div>
@@ -267,23 +356,27 @@ export default function Registration() {
                   </label>
                   <input
                     type="number"
-                    id="contact-form-email"
-                    class=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                    id="contact-form-phone-number"
+                    className=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                     placeholder="99-999-88-77"
+                    onChange={(e) => setPhone(e.target.value)}
+                    value={phone}
                     required
                   />
                 </div>
               </div>
               <div className="grid max-w-5xl mt-3 grid-cols-2 gap-4 ">
                 <div className="col-span-3  lg:col-span-1 d:col-span-1 tablet:col-span-1 mobile:col-span-1">
-                  <label class="block text-left ">
+                  <label className="block text-left ">
                     Muassangizni tanlang
                     <select
-                      id="region"
-                      class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500   "
-                      name="region"
+                      id="organization"
+                      className="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500   "
+                      name="organization"
                       onChange={(e) => setOrganization(e.target.value)}
                     >
+                      <option>Tanlang</option>
+
                       {data3.map((d, index) => (
                         <option key={index} value={d}>
                           {d}
@@ -293,15 +386,17 @@ export default function Registration() {
                   </label>
                 </div>
                 <div className="col-span-3 lg:col-span-1 d:col-span-1 tablet:col-span-1 mobile:col-span-1">
-                  <label class="block text-left">
+                  <label className="block text-left">
                     Muassangizni tanlang
                     <select
-                      id="region"
-                      class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-                      name="city"
+                      id="organizationName"
+                      className="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                      name="organizationName"
                       onChange={(e) => setOrganizationName(e.target.value)}
                       disabled={organization ? false : true}
                     >
+                      <option>Tanlang</option>
+
                       {data4.map((d) => {
                         return d[`${organization}`]
                           ? d[`${organization}`].map((item, index) => (
@@ -320,8 +415,10 @@ export default function Registration() {
                   <input
                     type="text"
                     id="contact-form-bolinma"
-                    class=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                    className=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                     placeholder="Bo'linmangizni kiriting"
+                    onChange={(e) => setSection(e.target.value)}
+                    value={section}
                     required
                   />
                 </div>
@@ -329,8 +426,10 @@ export default function Registration() {
                   <input
                     type="text"
                     id="contact-form-position"
-                    class=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                    className=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                     placeholder="Lavoziminigizni kiriting"
+                    onChange={(e) => setPosition(e.target.value)}
+                    value={position}
                     required
                   />
                 </div>
@@ -354,12 +453,32 @@ export default function Registration() {
                   />
                 </Form.Item>
               </div>
-              <button
-                type="submit"
-                className="w-full mt-4 px-4 py-2 text-base font-semibold text-center text-white transition duration-200 ease-in bg-black shadow-md hover:text-black hover:bg-white focus:outline-none focus:ring-2"
-              >
-                <span className="w-full">Ro'yxatdan o'tish</span>
-              </button>
+              {loading ? (
+                <div class="bg-black flex justify-center px-4 py-2 items-center text-indigo-50 font-semibold p-4 disabled cursor-not-allowed">
+                  <svg
+                    class="animate-spin h-5 w-5 mr-3"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                    />
+                  </svg>
+                  Loading...
+                </div>
+              ) : (
+                <button
+                  type="submit"
+                  className="w-full px-4 py-2 text-base font-semibold text-center text-white transition duration-200 ease-in bg-black shadow-md hover:text-black hover:bg-white focus:outline-none focus:ring-2"
+                >
+                  <span className="w-full">Ro'xatdan o'tish</span>
+                </button>
+              )}
             </form>
             <div className="pt-12 pb-12 text-center">
               <p>

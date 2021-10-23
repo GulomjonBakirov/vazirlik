@@ -1,13 +1,33 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { login, clearErrors } from "../../actions/userActions";
+import { message } from "antd";
 
-export default function Login() {
+export default function Login({ history }) {
+  const { loading, isAuthanticated, error, user } = useSelector(
+    (state) => state.auth
+  );
+  const dispatch = useDispatch();
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
   const submitHandler = (e) => {
     e.preventDefault();
-    console.log(username, password);
+    dispatch(login(username, password));
   };
+
+  useEffect(() => {
+    if (isAuthanticated) {
+      history.push("/profile");
+    }
+    if (error) {
+      message.error("Parol yoki username hato");
+      dispatch(clearErrors());
+    }
+  }, [history, isAuthanticated, dispatch, error]);
+
   return (
     <div className="flex flex-wrap w-full">
       <div className="flex flex-col w-full md:w-1/2">
@@ -60,12 +80,32 @@ export default function Login() {
                 />
               </div>
             </div>
-            <button
-              type="submit"
-              className="w-full px-4 py-2 text-base font-semibold text-center text-white transition duration-200 ease-in bg-black shadow-md hover:text-black hover:bg-white focus:outline-none focus:ring-2"
-            >
-              <span className="w-full">Kirish</span>
-            </button>
+            {loading ? (
+              <div class="bg-black flex justify-center px-4 py-2 items-center text-indigo-50 font-semibold p-4 disabled cursor-not-allowed">
+                <svg
+                  class="animate-spin h-5 w-5 mr-3"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                  />
+                </svg>
+                Loading...
+              </div>
+            ) : (
+              <button
+                type="submit"
+                className="w-full px-4 py-2 text-base font-semibold text-center text-white transition duration-200 ease-in bg-black shadow-md hover:text-black hover:bg-white focus:outline-none focus:ring-2"
+              >
+                <span className="w-full">Kirish</span>
+              </button>
+            )}
           </form>
           <div className="pt-12 pb-12 text-center">
             <p>

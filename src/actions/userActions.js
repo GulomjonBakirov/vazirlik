@@ -17,6 +17,7 @@ import {
   registration,
   login as Login,
   logout as Logout,
+  loadUser as LoadUser,
 } from "../constants/apiConstants";
 
 //Login
@@ -37,6 +38,7 @@ export const login = (username, password) => async (dispatch) => {
       { username: username, password: password },
       config
     );
+    localStorage.setItem("access_token", data.token);
 
     dispatch({
       type: LOGIN_SUCCESS,
@@ -59,12 +61,11 @@ export const register = (userData) => async (dispatch) => {
 
     const config = {
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "multipart/form-data",
       },
     };
 
     const { data } = await axios.post(registration, userData, config);
-    console.log(userData);
     dispatch({
       type: REGISTER_USER_SUCCESS,
       payload: data,
@@ -82,16 +83,21 @@ export const loadUser = () => async (dispatch) => {
     dispatch({
       type: LOAD_USER_REQUEST,
     });
+    const config = {
+      headers: {
+        "x-access-token": localStorage.getItem("access_token"),
+      },
+    };
+    const { data } = await axios.get(LoadUser, config);
 
-    const { data } = await axios.get("/api/v1/me");
     dispatch({
       type: LOAD_USER_SUCCESS,
-      payload: data.user,
+      payload: data,
     });
   } catch (error) {
     dispatch({
       type: LOAD_USER_FAIL,
-      payload: error.response.data.errMessage,
+      payload: error,
     });
   }
 };
@@ -102,6 +108,7 @@ export const logout = () => async (dispatch) => {
     dispatch({
       type: LOGOUT_SUCCESS,
     });
+    localStorage.removeItem("access_token");
   } catch (error) {
     dispatch({
       type: LOGOUT_FAIL,
