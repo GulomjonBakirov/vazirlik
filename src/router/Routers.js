@@ -4,17 +4,14 @@ import {
   Route,
   Redirect,
 } from "react-router-dom";
+import Main from "../containers/layouts/Main";
 import Nav from "../containers/layouts/Navbar/Nav";
 import Login from "../containers/views/Login";
+import Home from "../containers/views/Main/Home/Home";
 import Notfound from "../containers/views/Notfound";
+import Profile from "../containers/views/Profile/Profile";
 import Registration from "../containers/views/Registration/Registration";
 
-const Main = ({ children }) => {
-  return <div>Salom {children}</div>;
-};
-const Profile = () => {
-  return <h1>Profile</h1>;
-};
 const ProfileSetings = () => {
   return <h1>Profile Setings</h1>;
 };
@@ -26,23 +23,23 @@ export default function Routers() {
         <Route path="/registration" component={Registration} />
 
         <Route path="/profile/:path?" exact>
-          <Nav>
+          <Main>
             <Switch>
               <Route path="/profile" exact component={Profile} />
               <Route path="/profile/settings" component={ProfileSetings} />
               <Route path="*" component={Notfound} />
             </Switch>
-          </Nav>
+          </Main>
         </Route>
 
         <Route>
-          <Nav>
+          <Main>
             <Switch>
-              <Route exact path="/" component={Profile} />
+              <Route exact path="/" component={Home} />
               <Route path="/about" component={ProfileSetings} />
               <Route path="*" component={Notfound} />
             </Switch>
-          </Nav>
+          </Main>
         </Route>
       </Switch>
     </Router>
