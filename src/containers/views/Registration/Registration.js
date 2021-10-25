@@ -78,7 +78,6 @@ export default function Registration({ history }) {
     reader.onload = () => {
       if (reader.readyState === 2) {
         setAvatarImage(reader.result);
-        console.log(reader);
       }
     };
     reader.readAsDataURL(e.target.files[0]);
@@ -105,7 +104,7 @@ export default function Registration({ history }) {
       Bol: section,
       Lavoz: position,
       Course: checkedList,
-      file: avatarImage,
+      // file: avatarImage,
     };
     // const formData = new FormData();
     // formData.append("name", name);

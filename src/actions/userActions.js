@@ -61,10 +61,10 @@ export const register = (userData) => async (dispatch) => {
 
     const config = {
       headers: {
-        "Content-Type": "multipart/form-data",
+        "Content-Type": "application/json",
       },
     };
-
+    console.log(userData);
     const { data } = await axios.post(registration, userData, config);
     dispatch({
       type: REGISTER_USER_SUCCESS,

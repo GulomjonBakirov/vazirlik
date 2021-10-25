@@ -45,7 +45,7 @@ export default function Courses({ userInfo }) {
 
                 <div className="mt-4">
                   <Link
-                    to="/myCourses/:id"
+                    to="/myCourses/course/1"
                     className="bg-green-500 hover:bg-green-700 hover:text-white text-white text-center py-2 px-4 rounded "
                   >
                     More Information

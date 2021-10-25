@@ -1,6 +1,6 @@
 import React from "react";
 import About from "./About";
-import Courses from "./Courses";
+import MyCourses from "./MyCourses";
 import Loading from "../../../layouts/Loading/Loading";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -17,7 +17,7 @@ export default function Sidebar() {
 
       <div className="my-4"></div>
 
-      <Courses userInfo={User.user} />
+      <MyCourses userInfo={User.user} />
     </div>
   );
 }
