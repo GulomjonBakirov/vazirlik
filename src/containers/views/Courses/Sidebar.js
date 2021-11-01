@@ -78,7 +78,7 @@ export default function Sidebar() {
             </Link>
           </div>
           <Link
-            to="/certificate"
+            to="/myCourses/course/certificate"
             className="flex mt-10 items-center mt-screen space-x-3 text-white p-2 rounded-md font-medium hover:bg-gray-600 bg-gray-500 focus:shadow-outline"
           >
             Sertifikat Olish

@@ -2,10 +2,12 @@ import Routers from "./router/Routers";
 import { loadUser } from "./actions/userActions";
 import store from "./store";
 import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 
 function App() {
+  const dispatch = useDispatch();
   useEffect(() => {
-    store.dispatch(loadUser());
+    dispatch(loadUser());
   }, []);
 
   return (
