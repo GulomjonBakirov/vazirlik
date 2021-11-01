@@ -7,7 +7,7 @@ import Features from "./Features";
 export default function Home() {
   return (
     <div className="Home">
-      <div
+      {/* <div
         className="container"
         style={{
           display: "flex",
@@ -15,10 +15,10 @@ export default function Home() {
           alignItems: "center",
           flexDirection: "column",
         }}
-      >
-        <InnerHome />
-        <Features />
-      </div>
+      > */}
+      <InnerHome />
+      <Features />
+      {/* </div> */}
     </div>
   );
 }
