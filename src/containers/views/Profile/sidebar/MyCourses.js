@@ -7,7 +7,7 @@ const style = {
   backgroundImage: `url(${backgroundCourse})`,
 };
 
-export default function Courses({ userInfo }) {
+export default function MyCourses({ userInfo }) {
   return (
     <div className="bg-white p-3 shadow-sm rounded-sm">
       <h1 className="text-center text-green-600 text-3xl">Mening Kurslarim</h1>
@@ -45,7 +45,7 @@ export default function Courses({ userInfo }) {
 
                 <div className="mt-4">
                   <Link
-                    to="/myCourses/course/1"
+                    to="/courses/1"
                     className="bg-green-500 hover:bg-green-700 hover:text-white text-white text-center py-2 px-4 rounded "
                   >
                     More Information

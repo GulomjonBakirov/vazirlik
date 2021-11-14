@@ -12,22 +12,18 @@ export default function Profile({ history }) {
     user: User,
   } = useSelector((state) => state.auth);
 
-  return (
-    <div>
-      {loading ? (
-        <Loading />
-      ) : isAuthanticated ? (
-        <div className="container mx-auto my-5 p-5">
-          <div className="md:flex no-wrap md:-mx-2 ">
-            {/* <!-- Left Side --> */}
-            <LeftSide />
-            {/* <!-- Right Side --> */}
-            <Sidebar />
-          </div>
-        </div>
-      ) : (
-        <h1>PLease login for this access ???</h1>
-      )}
+  return loading ? (
+    <Loading />
+  ) : isAuthanticated ? (
+    <div className="container mx-auto my-5 p-5">
+      <div className="md:flex no-wrap md:-mx-2 ">
+        {/* <!-- Left Side --> */}
+        <LeftSide />
+        {/* <!-- Right Side --> */}
+        <Sidebar />
+      </div>
     </div>
+  ) : (
+    <h1>PLease login for this access ???</h1>
   );
 }

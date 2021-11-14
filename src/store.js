@@ -6,6 +6,7 @@ import { authReducer } from "./reducers/userReducer";
 const reducer = combineReducers({
   auth: authReducer,
 });
+
 const middleware = [thunk];
 let initialState = {};
 

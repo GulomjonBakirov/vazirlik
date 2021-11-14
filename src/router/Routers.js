@@ -18,6 +18,9 @@ import Profile from "../containers/views/Profile/Profile";
 import Registration from "../containers/views/Registration/Registration";
 import Certificate from "../containers/views/Courses/certificate/Certificate";
 import { useDispatch } from "react-redux";
+import Payment from "../containers/views/Payment";
+import { PrivateRoute } from "./PrivateRoute";
+import Quiz from "../containers/views/quizApp/Quiz";
 
 const ProfileSetings = () => {
   return <h1>Profile Setings</h1>;
@@ -26,46 +29,58 @@ const ProfileSetings = () => {
 export default function Routers() {
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(loadUser());
-  }, []);
-
   return (
     <Router>
       <Switch>
         <Route path="/login" component={Login} />
         <Route path="/registration" component={Registration} />
 
-        <Route path="/profile/:path?" exact>
+        <Route exact path="/">
           <Main>
-            <Switch>
-              <Route path="/profile" exact component={Profile} />
-              {/* <Route path="/profile/settings" component={ProfileSetings} /> */}
-              {/* <Route path="/myCourses" component={Courses} /> */}
-            </Switch>
+            <Home />
           </Main>
         </Route>
-
-        <Route path="/myCourses/course/:path?" exact>
-          <Courses>
-            <Route path="/myCourses/course/0" component={Content} />
-            <Route path="/myCourses/course/1" component={Content} />
-            <Route path="/myCourses/course/2" component={Content} />
-            <Route path="/myCourses/course/test" component={TestContent} />
-            <Route
-              path="/myCourses/course/certificate"
-              component={Certificate}
-            />
-          </Courses>
-        </Route>
-
-        <Route>
+        {/* <Route path="/about" component={ProfileSetings} /> */}
+        <PrivateRoute exact path="/profile">
           <Main>
-            <Switch>
-              <Route exact path="/" component={Home} />
-              {/* <Route path="/about" component={ProfileSetings} /> */}
-              <Route path="*" component={Notfound} />
-            </Switch>
+            <Profile />
+          </Main>
+        </PrivateRoute>
+        <Route exact path="/payment">
+          <Main>
+            <Payment />
+          </Main>
+        </Route>
+        <PrivateRoute exact path="/courses/0">
+          <Courses>
+            <Content />
+          </Courses>
+        </PrivateRoute>
+        <PrivateRoute exact path="/courses/1">
+          <Courses>
+            <Content />
+          </Courses>
+        </PrivateRoute>
+        <PrivateRoute exact path="/courses/2">
+          <Courses>
+            <Content />
+          </Courses>
+        </PrivateRoute>
+
+        <PrivateRoute exact path="/courses/test">
+          <Courses>
+            <TestContent />
+            {/* <Quiz /> */}
+          </Courses>
+        </PrivateRoute>
+        <PrivateRoute exact path="/courses/certificate">
+          <Courses>
+            <Certificate />
+          </Courses>
+        </PrivateRoute>
+        <Route path="*">
+          <Main>
+            <Notfound />
           </Main>
         </Route>
       </Switch>
