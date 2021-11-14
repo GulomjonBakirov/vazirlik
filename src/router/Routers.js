@@ -20,7 +20,7 @@ import Certificate from "../containers/views/Courses/certificate/Certificate";
 import { useDispatch } from "react-redux";
 import Payment from "../containers/views/Payment";
 import { PrivateRoute } from "./PrivateRoute";
-import Quiz from "../containers/views/quizApp/Quiz";
+// import Quiz from "../containers/views/quizApp/Quiz";
 
 const ProfileSetings = () => {
   return <h1>Profile Setings</h1>;
